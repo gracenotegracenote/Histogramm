@@ -14,33 +14,59 @@ public class Main {
 			{'*', '*', '*'}
 	};
 
+	private static int starIndex = -1;
+
+
 	public static void main(String[] args) {
 		double[] data = {1,2,3};
 		double[] data1 = {1.1, 1.9, 2.2, 3.0, 5.1, 5.2, 4.3, 0.1, 4.5, 5.1};
 		double[] data2 = {8.0, 6.0, 4.0, 1.0, 2.0, 3.0, 4.0, 9.0};
 
-		printHistogram(data2);
-
-		//printStars(stars);
-
-		System.out.println();
-		System.out.println("Max area: " + findRectangle(stars));
+		char[][] hist = getHistogram(data);
+		printHistogram(hist);
+		//System.out.println("Max area: " + getMaxRectangleArea(stars));
 	}
 
-	private static void printStars(char[][] array) {
-		if (array != null) {
-			System.out.println();
+	private static void printHistogram(char[][] hist) {
+		//TODO: null pointer exception
 
-			for (int i = 0; i < array.length; i++) {
-				for (int j = 0; j < array[i].length; j++) {
-					System.out.print(array[i][j]);
-				}
-				System.out.println();
+		//print rows
+		int i2 = 0;
+
+		for (int i = hist.length; i > 0 ; i--) {
+			System.out.print(i + "|");
+
+			for (int j = 0; j < hist[0].length; j++) {
+				System.out.print(hist[i2][j]);
 			}
+			i2++;
+			System.out.println();
+		}
+
+		//print abscissa
+		System.out.print("0+");
+		for (int i = 0; i < hist[0].length; i++) {
+			System.out.print("-");
+		}
+		System.out.println();
+		System.out.print(" ");
+		for (int i = 0; i <= hist[0].length; i++) {
+			System.out.print(i);
 		}
 	}
 
-	private static int findRectangle(char[][] array) {
+	private static void printStars(char[][] array) {
+		//TODO: null pointer exception
+
+		for (int i = 0; i < array.length; i++) {
+			for (int j = 0; j < array[i].length; j++) {
+				System.out.print(array[i][j]);
+			}
+			System.out.println();
+		}
+	}
+
+	private static int getMaxRectangleArea(char[][] array) {
 		//TODO: null pointer exception
 
 		Deque<Integer> stack = new ArrayDeque<>();
@@ -74,6 +100,8 @@ public class Main {
 
 					if (area > maxArea) {
 						maxArea = area;
+						starIndex = i - 1;
+						System.out.println("Index = " + starIndex);
 					}
 
 					if (stack.isEmpty()) {
@@ -104,7 +132,7 @@ public class Main {
 		return high;
 	}
 
-	private static void printHistogram(double[] data) {
+	private static void printHist(double[] data) {
 		int dataLength = data.length;
 
 		//find min and max elements
@@ -155,5 +183,41 @@ public class Main {
 		for (int i = 0; i <= data.length; i++) {
 			System.out.print(i);
 		}
+	}
+
+	private static char[][] getHistogram(double[] data) {
+		int dataLength = data.length;
+
+		//find min and max elements
+		int min = Integer.MAX_VALUE;
+		int max = Integer.MIN_VALUE;
+		for (int i = 0; i < data.length; i++) {
+			if (data[i] > max) {
+				max = (int) Math.round(data[i]);
+			}
+
+			if (data[i] < min) {
+				min = (int) Math.round(data[i]);
+			}
+		}
+
+		char[][] array = new char[max][dataLength];
+		int i2 = 0;
+
+		for (int i = max; i >= min; i--) {
+			if (i <= 0) break;
+
+			for (int index = 0; index < data.length; index++) {
+				double elemRounded = Math.round(data[index]);
+				if (elemRounded >= i) {
+					array[i2][index] = '*';
+				} else {
+					array[i2][index] = ' ';
+				}
+			}
+			i2++;
+		}
+
+		return array;
 	}
 }
