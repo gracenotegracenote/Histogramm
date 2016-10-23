@@ -19,7 +19,7 @@ public class Main {
 		double[] data1 = {1.1, 1.9, 2.2, 3.0, 5.1, 5.2, 4.3, 0.1, 4.5, 5.1};
 		double[] data2 = {8.0, 6.0, 4.0, 1.0, 2.0, 3.0, 4.0, 9.0};
 
-		printHistogram(data);
+		printHistogram(data2);
 
 		//printStars(stars);
 
@@ -43,16 +43,16 @@ public class Main {
 	private static int findRectangle(char[][] array) {
 		//TODO: null pointer exception
 
-		Deque<Integer> stack = new ArrayDeque<Integer>();
+		Deque<Integer> stack = new ArrayDeque<>();
 
 		//first iteration
 		stack.push(0);
-		int top = 0;
 		int area;
 		int maxArea = 0;
 
 		//further iterations
-		for (int i = 1; i <= array[0].length; i++) {
+		int n = array.length - 1; //last row index
+		for (int i = 1; i <= array[n].length; i++) {
 			int currentHigh = 0;
 			if (i < array[0].length) {
 				currentHigh = getHighOfColumn(array, i);
@@ -75,8 +75,6 @@ public class Main {
 					if (area > maxArea) {
 						maxArea = area;
 					}
-
-					if (i == array[0].length) return maxArea;
 
 					if (stack.isEmpty()) {
 						stack.push(i);
