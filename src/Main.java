@@ -6,14 +6,6 @@ import java.util.Deque;
  * Date: 19-Oct-16
  */
 public class Main {
-	private static char[][] stars;
-	private static char[][] stars2 = {
-			{' ', ' ', '*'},
-			{' ', ' ', '*'},
-			{' ', '*', '*'},
-			{'*', '*', '*'}
-	};
-
 	private static int starIndex = -1;
 
 
@@ -22,9 +14,57 @@ public class Main {
 		double[] data1 = {1.1, 1.9, 2.2, 3.0, 5.1, 5.2, 4.3, 0.1, 4.5, 5.1};
 		double[] data2 = {8.0, 6.0, 4.0, 1.0, 2.0, 3.0, 4.0, 9.0};
 
-		char[][] hist = getHistogram(data);
+		//TODO: remove starIndex from field
+		char[][] hist = getHistogram(data2);
 		printHistogram(hist);
-		//System.out.println("Max area: " + getMaxRectangleArea(stars));
+		System.out.println("Max area: " + getMaxRectangleArea(hist));
+		System.out.println("Start index: " + starIndex);
+
+		System.out.println();
+		char[][] newHist = changeHistogram(hist, starIndex);
+		printHistogram(newHist);
+	}
+
+	private static char[][] changeHistogram(char[][] hist, int startIndex) {
+		//TODO: startIndex = -1, null pointer exception
+		char[][] newHist = hist;
+		int high = getHighOfColumn(hist, startIndex);
+		int shortestSide = (startIndex <= high) ? startIndex : high;
+		int longestSide = getMaxRectangleArea(hist) / shortestSide;
+		boolean highLonger = (startIndex <= high);
+		int startInd = startIndex;
+		int area = getMaxRectangleArea(hist);
+
+
+		//if high longer -> go horizontal, otherwise -> go vertical
+		if (!highLonger) {
+			for (int i = hist.length - 1; i > hist.length - 1 - high; i--) {
+				for (int j = startInd; j > startInd - (area / high); j--) {
+					newHist[i][j] = 'O';
+				}
+			}
+		} else {
+			//METHOD 1: doesnt work
+			/*for (int i = startInd; i > 0; i--) {
+				for (int j = hist.length - 1; j > hist.length - 1 - longestSide; j--) {
+ 					hist[i][j] = 'O';
+				}
+			}*/
+
+			//METHOD 2: doesnt work
+			/*int newHigh = high;
+			while (newHigh > startInd) {
+				newHigh--;
+			}
+
+			for (int i = hist.length - 1; i > hist.length - 1 - newHigh; i--) {
+				for (int j = startInd; j > startInd - (area / newHigh); j--) {
+					newHist[i][j] = 'O';
+				}
+			}*/
+		}
+
+		return newHist;
 	}
 
 	private static void printHistogram(char[][] hist) {
@@ -53,6 +93,7 @@ public class Main {
 		for (int i = 0; i <= hist[0].length; i++) {
 			System.out.print(i);
 		}
+		System.out.println();
 	}
 
 	private static void printStars(char[][] array) {
@@ -101,7 +142,6 @@ public class Main {
 					if (area > maxArea) {
 						maxArea = area;
 						starIndex = i - 1;
-						System.out.println("Index = " + starIndex);
 					}
 
 					if (stack.isEmpty()) {
@@ -171,7 +211,7 @@ public class Main {
 			System.out.println();
 		}
 
-		stars = array;
+		//stars = array;
 
 		//print abscissa
 		System.out.print("0+");
