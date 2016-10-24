@@ -6,7 +6,8 @@ import java.util.Deque;
  * Date: 19-Oct-16
  */
 public class Main {
-	private static int starIndex = -1;
+	private static int starIndex = -1; //rename to endIndex
+	private static int initIndex = -1;
 
 
 	public static void main(String[] args) {
@@ -15,19 +16,36 @@ public class Main {
 		double[] data2 = {8.0, 6.0, 4.0, 1.0, 2.0, 3.0, 4.0, 9.0};
 
 		//TODO: remove starIndex from field
-		char[][] hist = getHistogram(data2);
+		char[][] hist = getHistogram(data1);
 		printHistogram(hist);
 		System.out.println("Max area: " + getMaxRectangleArea(hist));
-		System.out.println("Start index: " + starIndex);
+		System.out.println("Begin index: " + initIndex);
+		System.out.println("End index: " + starIndex);
+
 
 		System.out.println();
-		char[][] newHist = changeHistogram(hist, starIndex);
+		char[][] newHist = changeHistogram(hist, initIndex, starIndex);
 		printHistogram(newHist);
 	}
 
-	private static char[][] changeHistogram(char[][] hist, int startIndex) {
+	private static char[][] changeHistogram(char[][] hist, int initIndex, int endIndex) {
 		//TODO: startIndex = -1, null pointer exception
+
 		char[][] newHist = hist;
+		int area = getMaxRectangleArea(newHist);
+		int horizontalSideLength = endIndex - initIndex + 1;
+		int verticalSideLength = area / horizontalSideLength;
+
+		for (int i = hist.length - 1; i > hist.length - 1 - verticalSideLength; i--) {
+			for (int j = initIndex; j < initIndex + horizontalSideLength; j++) {
+				newHist[i][j] = 'O';
+			}
+		}
+
+
+
+
+		/*char[][] newHist = hist;
 		int high = getHighOfColumn(hist, startIndex);
 		int shortestSide = (startIndex <= high) ? startIndex : high;
 		int longestSide = getMaxRectangleArea(hist) / shortestSide;
@@ -36,7 +54,7 @@ public class Main {
 		int area = getMaxRectangleArea(hist);
 
 
-		//if high longer -> go horizontal, otherwise -> go vertical
+		if high longer -> go horizontal, otherwise -> go vertical
 		if (!highLonger) {
 			for (int i = hist.length - 1; i > hist.length - 1 - high; i--) {
 				for (int j = startInd; j > startInd - (area / high); j--) {
@@ -49,10 +67,10 @@ public class Main {
 				for (int j = hist.length - 1; j > hist.length - 1 - longestSide; j--) {
  					hist[i][j] = 'O';
 				}
-			}*/
+			}
 
 			//METHOD 2: doesnt work
-			/*int newHigh = high;
+			int newHigh = high;
 			while (newHigh > startInd) {
 				newHigh--;
 			}
@@ -61,8 +79,8 @@ public class Main {
 				for (int j = startInd; j > startInd - (area / newHigh); j--) {
 					newHist[i][j] = 'O';
 				}
-			}*/
-		}
+			}
+		}*/
 
 		return newHist;
 	}
@@ -112,6 +130,8 @@ public class Main {
 
 		Deque<Integer> stack = new ArrayDeque<>();
 
+		initIndex = 0;
+
 		//first iteration
 		stack.push(0);
 		int area;
@@ -131,7 +151,9 @@ public class Main {
 				stack.push(i);
 			} else {
 				while (currentHigh < highToCompare) {
-					stack.remove();
+					int lastJ = initIndex;
+					int tempJ = stack.remove();
+					//System.out.println("tempJ = " + tempJ);
 
 					if (stack.isEmpty()) {
 						area = highToCompare * i;
@@ -142,6 +164,10 @@ public class Main {
 					if (area > maxArea) {
 						maxArea = area;
 						starIndex = i - 1;
+
+						initIndex = tempJ;
+						if (initIndex == starIndex) initIndex = lastJ;
+						//System.out.println("Begin index = " + initIndex);
 					}
 
 					if (stack.isEmpty()) {
@@ -157,7 +183,6 @@ public class Main {
 				}
 			}
 		}
-
 		return maxArea;
 	}
 
