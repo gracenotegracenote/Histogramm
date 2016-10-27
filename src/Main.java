@@ -42,46 +42,6 @@ public class Main {
 			}
 		}
 
-
-
-
-		/*char[][] newHist = hist;
-		int high = getHighOfColumn(hist, startIndex);
-		int shortestSide = (startIndex <= high) ? startIndex : high;
-		int longestSide = getMaxRectangleArea(hist) / shortestSide;
-		boolean highLonger = (startIndex <= high);
-		int startInd = startIndex;
-		int area = getMaxRectangleArea(hist);
-
-
-		if high longer -> go horizontal, otherwise -> go vertical
-		if (!highLonger) {
-			for (int i = hist.length - 1; i > hist.length - 1 - high; i--) {
-				for (int j = startInd; j > startInd - (area / high); j--) {
-					newHist[i][j] = 'O';
-				}
-			}
-		} else {
-			//METHOD 1: doesnt work
-			/*for (int i = startInd; i > 0; i--) {
-				for (int j = hist.length - 1; j > hist.length - 1 - longestSide; j--) {
- 					hist[i][j] = 'O';
-				}
-			}
-
-			//METHOD 2: doesnt work
-			int newHigh = high;
-			while (newHigh > startInd) {
-				newHigh--;
-			}
-
-			for (int i = hist.length - 1; i > hist.length - 1 - newHigh; i--) {
-				for (int j = startInd; j > startInd - (area / newHigh); j--) {
-					newHist[i][j] = 'O';
-				}
-			}
-		}*/
-
 		return newHist;
 	}
 
